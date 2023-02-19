@@ -1,0 +1,24 @@
+#
+# https://gitlab.com/gitlab-org/gitlab-foss/tree/master/lib/gitlab/ci/templates/PHP.gitlab-ci.yml
+#
+# No need to explicitly write this on your .gitlab-ci.yml file.
+# Add and edit if you want different stage configurations.
+stages:
+  - deploy
+
+services:
+  # needed - otherwise we getting error like:
+  # error during connect: Post http://docker:2375/v1.40/auth: dial tcp: lookup docker on 169.254.169.254:53: no such host
+  # Changed to docker:19.03.5-dind due to issue https://gitlab.com/gitlab-com/support-forum/issues/5202
+  - docker:19.03.5-dind
+
+docker-build:
+  image: docker:latest
+  stage: deploy
+  script:
+    # using echo here for password cause https://stackoverflow.com/questions/51489359/docker-using-password-via-the-cli-is-insecure-use-password-stdin
+    - echo $CI_BUILD_TOKEN | docker login --username gitlab-ci-token --password-stdin registry.gitlab.com
+    - docker build -t registry.gitlab.com/devnik/devnik-api/$CI_COMMIT_REF_NAME .;
+    - docker push registry.gitlab.com/devnik/devnik-api/$CI_COMMIT_REF_NAME;
+  only:
+    - master
