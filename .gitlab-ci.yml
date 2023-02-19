@@ -8,8 +8,8 @@ containerization:
   stage: containerization # must match the stage name declared above
   script:
     # Build the container image
-    - docker build -t devnik/devnik-api .
+    - docker build -t registry.gitlab.com/devnik/devnik-api .
     # Push the container image to the registry
-    - docker push devnik/devnik-api
+    - docker push registry.gitlab.com/devnik/devnik-api
     # Cleanup by removing the local image
-    - docker image rm devnik/devnik-api
+    - docker image rm registry.gitlab.com/devnik/devnik-api
