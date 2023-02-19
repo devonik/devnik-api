@@ -1,5 +1,9 @@
 stages:
   - containerization
+
+services: 
+    - name: docker:latest
+
 containerization:
   stage: containerization # must match the stage name declared above
   script:
