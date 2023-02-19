@@ -1,0 +1,22 @@
+version: "3.3"
+
+services:
+  devnik-api:
+    image: "registry.gitlab.com/devnik/devnik-api/master:latest"
+    container_name: "devnik-api"
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.devnik-api.rule=Host(`api.devnik.dev`)"
+      - "traefik.http.routers.devnik-api.entrypoints=websecure"
+      - "traefik.http.routers.devnik-api.tls.certresolver=devnik-resolver"
+    networks:
+      - proxy
+    environment:
+      TZ: Europe/Berlin
+
+#Docker Networks
+networks:
+  proxy:
+    external:
+      name: "traefik_proxy"
