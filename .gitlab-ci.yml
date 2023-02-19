@@ -6,12 +6,6 @@
 stages:
   - deploy
 
-services:
-  # needed - otherwise we getting error like:
-  # error during connect: Post http://docker:2375/v1.40/auth: dial tcp: lookup docker on 169.254.169.254:53: no such host
-  # Changed to docker:19.03.5-dind due to issue https://gitlab.com/gitlab-com/support-forum/issues/5202
-  - docker:19.03.5-dind
-
 docker-build:
   image: docker:latest
   stage: deploy
