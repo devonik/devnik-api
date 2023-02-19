@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   devnik-api:
-    image: "registry.gitlab.com/devnik/devnik-api/master:latest"
+    image: "registry.gitlab.com/devnik/devnik-api/main:latest"
     container_name: "devnik-api"
     restart: always
     labels:
