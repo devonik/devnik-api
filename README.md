@@ -1,4 +1,2 @@
-# Build docker image
-```
-docker build . -t devnik-api
-```
+# My node js api
+This is my node js running in a docker container via docker-compose on my virtual server
