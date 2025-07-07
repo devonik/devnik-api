@@ -12,7 +12,7 @@ module.exports = {
         await finished(Readable.fromWeb(res.body).pipe(fileStream));
     }),
     sendSlackLog: (text) => {
-        fetch('https://hooks.slack.com/services/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', {
+        fetch(process.env.SLACK_WEBHOOK_URL, {
             method: 'POST',
             body: JSON.stringify({
                 text
