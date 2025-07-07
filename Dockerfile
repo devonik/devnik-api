@@ -8,7 +8,7 @@ WORKDIR /app
 # where available (npm@5+)
 COPY package*.json ./
 RUN npm install
-COPY . .
+COPY . /app
 # If you are building your code for production
 # RUN npm ci --only=production
 

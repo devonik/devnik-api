@@ -1,29 +1,28 @@
-image: node:latest
-
 stages:
   - build
-  - docker-build
+  - push
 
-cache:
-  paths:
-    - node_modules/
+variables:
+  DOCKER_DRIVER: overlay2
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
 
-build:
+build_image:
   stage: build
-  script:
-    - echo "Start building App"
-    - npm install
-    - echo "Build successfully!"
-
-docker-build:
-  stage: docker-build
   image: docker:latest
   services:
     - docker:dind
-  before_script:
-    - sh ./setup_env.sh
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
-    - docker push "$CI_REGISTRY_IMAGE"
-    - echo "Built Docker Image Successfully!"
+    - sh ./setup_env.sh
+    - docker build -t $IMAGE_TAG .
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:latest
+
+push_image:
+  stage: push
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - docker push $IMAGE_TAG
+    - docker push $CI_REGISTRY_IMAGE:latest
