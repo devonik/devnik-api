@@ -1,21 +1,29 @@
-image: docker:latest
-
-services:
-  - docker:dind
-
-variables:
-  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+image: node:latest
 
 stages:
   - build
+  - docker-build
+
+cache:
+  paths:
+    - node_modules/
 
 build:
   stage: build
   script:
+    - echo "Start building App"
+    - npm install
+    - echo "Build successfully!"
+
+docker-build:
+  stage: docker-build
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
     - sh ./setup_env.sh
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - docker build --pull -t "$IMAGE_TAG" .
-    - docker push "$IMAGE_TAG"
-  only:
-    - main
-
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
+    - echo "Built Docker Image Successfully!"
