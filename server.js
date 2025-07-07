@@ -84,7 +84,7 @@ app.post("/ai/image", basicAuth, async (req, res) => {
     
     await downloadFile(json2.data.generated[0], filename)
 
-    sendSlackLog(`Freepick - AI image downloaded. New url: https://api.devnik.dev/storage/${filename}`)
+    sendSlackLog(`Freepick - AI image downloaded. Download path: ${path.resolve("./storage", filename)}`)
 
     await fs.readFile(path.resolve("./storage", filename)).then(data =>{
       res.writeHead(200, {'Content-Type': 'image/jpeg'})
