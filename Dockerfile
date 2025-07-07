@@ -18,4 +18,4 @@ EXPOSE 8080
 # Bundle app source
 COPY . .
 
-CMD ["npm", "start"]
+CMD npm start
