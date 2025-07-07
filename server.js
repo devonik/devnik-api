@@ -26,8 +26,10 @@ app.get('/', (req, res) => {
 //---Storage api
 app.get('/storage', basicAuth, (req, res) => {
   const fileName = req.query ? req.query.fileName || 'storage.json' : 'storage.json'
-  const data = fs.readFileSync('./storage/' + fileName);
-  res.json(JSON.parse(data))
+  fs.readFile('./storage/' + fileName).then(data => {
+    res.json(JSON.parse(data))
+  })
+  
 })
 app.post('/storage', basicAuth, (req, res) => {
   const fileName = req.query ? req.query.fileName || 'storage.json' : 'storage.json'
@@ -35,8 +37,10 @@ app.post('/storage', basicAuth, (req, res) => {
     res.send("Body was empty")
     return
   }
-  fs.writeFileSync('./storage/' + fileName, JSON.stringify(req.body));
-  res.send('Succesfully saved data to ' + fileName)
+  fs.writeFile('./storage/' + fileName, JSON.stringify(req.body)).then(data => {
+    res.send('Succesfully saved data to ' + fileName)
+  })
+  
 })
 
 app.post("/ai/image", basicAuth, async (req, res) => {
